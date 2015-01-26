@@ -118,6 +118,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private boolean shouldExpand = false;
     private boolean textAllCaps = true;
     private boolean isPaddingMiddle = false;
+    private boolean smoothScroll = true;
 
     private Typeface tabTypeface = null;
     private int tabTypefaceStyle = Typeface.BOLD;
@@ -284,13 +285,14 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         }
 
         tabView.setFocusable(true);
+        final boolean smoothScroll = this.smoothScroll;
         tabView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (pager.getCurrentItem() != position) {
                     View tab = tabsContainer.getChildAt(pager.getCurrentItem());
                     notSelected(tab);
-                    pager.setCurrentItem(position);
+                    pager.setCurrentItem(position, smoothScroll);
                 } else if (tabReselectedListener != null) {
                     tabReselectedListener.onTabReselected(position);
                 }
@@ -735,6 +737,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         this.textAllCaps = textAllCaps;
     }
 
+    public void setSmoothScroll(boolean smoothScroll) {
+        this.smoothScroll = smoothScroll;
+    }
+
     public void setTextSize(int textSizePx) {
         this.tabTextSize = textSizePx;
         updateTabStyles();
@@ -764,7 +770,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     public void setTypeface(Typeface typeface, int style) {
         this.tabTypeface = typeface;
         this.tabTypefaceSelectedStyle = style;
+        this.tabTypefaceStyle = style;
         updateTabStyles();
+    }
+
+    public void setTabTextAlpha(float tabTextAlpha) {
+        this.tabTextAlpha = tabTextAlpha;
+    }
+
+    public void setTabTextSelectedAlpha(float tabTextSelectedAlpha) {
+        this.tabTextSelectedAlpha = tabTextSelectedAlpha;
     }
 
     public void setTabBackground(int resId) {
